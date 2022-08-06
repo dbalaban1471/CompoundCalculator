@@ -1,0 +1,39 @@
+name: .NET
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  FullProcess:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 5.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Run tests
+      run: dotnet test -c Release --verbosity normal
+      
+    - name: Build solution
+      run: dotnet build -c Release --no-incremental
+      
+    - name: Produce nuget package
+      run: dotnet pack -o .
+      
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: CompoundCalculator
+        path: CompoundCalculator.*.nupkg
