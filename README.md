@@ -7,3 +7,4 @@ Also, includes SpecFlow tests coverage.
 
 Status of last commit:<br>
 <img src="https://github.com/dbalaban1471/CompoundCalculator/workflows/CompoundCalculatorWorkflow/badge.svg?"><br>
+asd
