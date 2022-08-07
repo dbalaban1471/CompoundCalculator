@@ -41,6 +41,6 @@ jobs:
       if: github.ref_name == 'master'
       uses: actions/upload-artifact@v3
       with:
-        name: CompoundCalculator
+        name: CompoundCalculator_${{ github.sha }}
         path: CompoundCalculator.*.nupkg
         
