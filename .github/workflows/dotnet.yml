@@ -1,8 +1,12 @@
-name: .NET
+name: CompoundCalculatorWorkflow
 
 on:
+  workflow_dispatch:
+  
   push:
-    branches: [ "master" ]
+    branches:
+    - '**'
+    
   pull_request:
     branches: [ "master" ]
 
@@ -30,10 +34,13 @@ jobs:
       run: dotnet build -c Release --no-incremental
       
     - name: Produce nuget package
+      if: github.ref_name == 'master'
       run: dotnet pack -o .
       
     - name: Upload artifact
+      if: github.ref_name == 'master'
       uses: actions/upload-artifact@v3
       with:
         name: CompoundCalculator
         path: CompoundCalculator.*.nupkg
+        
