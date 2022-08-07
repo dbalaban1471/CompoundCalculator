@@ -5,14 +5,16 @@ on:
   
   push:
     branches:
-    - '**'
+    - 'master'
     
   pull_request:
-    branches: [ "master" ]
+    branches:
+    - 'master'
 
 jobs:
-  FullProcess:
-
+  TestProcess:
+  
+    if: github.ref_name != 'master'
     runs-on: windows-latest
 
     steps:
@@ -23,24 +25,32 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 5.0.x
-        
-    - name: Restore dependencies
-      run: dotnet restore
       
     - name: Run tests
       run: dotnet test -c Release --verbosity normal
+        
+  PublishProcess:
+  
+    if: github.ref_name == 'master'
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 5.0.x
       
     - name: Build solution
       run: dotnet build -c Release --no-incremental
       
     - name: Produce nuget package
-      if: github.ref_name == 'master'
-      run: dotnet pack -o .
+      run: dotnet pack -c Release -o .
       
     - name: Upload artifact
-      if: github.ref_name == 'master'
       uses: actions/upload-artifact@v3
       with:
         name: CompoundCalculator_${{ github.sha }}
-        path: CompoundCalculator.*.nupkg
-        
+        path: CompoundCalculator.*.nupkg      
